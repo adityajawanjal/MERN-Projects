@@ -1,13 +1,17 @@
 const Blog = require("../models/blog-model");
 const User = require("../models/user-model");
+const jwt = require("jsonwebtoken");
 
 exports.addBlog = async (req, res) => {
   try {
-    const { userId, title, description } = req.body;
+    const { title, description } = req.body;
+    const userId = req.user.id;
     const blog = new Blog({
       userId: userId,
       title: title,
       description: description,
+      picName: req.file.originalname,
+      picUrl: req.file.path,
     });
     await blog.save();
     await User.findByIdAndUpdate(userId, { $push: { blogs: blog._id } });
@@ -19,24 +23,13 @@ exports.addBlog = async (req, res) => {
 
 exports.getAllBlogs = async (req, res) => {
   try {
-    const blogs = await Blog.find({});
+    const blogs = await Blog.find({})
+      .populate("userId")
+      .select("-password")
+      .sort({ createdAt: "-1" });
     res.status(200).json(blogs);
   } catch (err) {
     res.status(400).json(`The error in getAllBlogs is ${err}`);
-  }
-};
-
-exports.getUserBlogs = async (req, res) => {
-  try {
-    const { userId } = req.params;
-    const blogs = await Blog.find({ userId: userId });
-    if (blogs) {
-      res.status(200).json(blogs);
-    } else {
-      res.status(400).json("no blogs of this user !");
-    }
-  } catch (err) {
-    res.status(400).json(`The error in getUserBlogs is ${err}`);
   }
 };
 

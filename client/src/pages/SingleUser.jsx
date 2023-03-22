@@ -1,31 +1,46 @@
 import React, { useEffect, useState } from "react";
 import {
-  Heading,
-  VStack,
-  Image,
-  Container,
   Box,
-  Text,
+  Center,
+  Heading,
   HStack,
+  Image,
+  Text,
+  VStack,
 } from "@chakra-ui/react";
-import { getAllBlogs } from "../services/api";
-import { Link } from "react-router-dom";
+import { getSingleUser } from "../services/api";
+import { useParams } from "react-router-dom";
 
-const Middle = () => {
+const SingleUser = () => {
+  const [info, setInfo] = useState({});
   const [blogs, setBlogs] = useState([]);
+  const params = useParams();
+
   useEffect(() => {
-    const fetchBlogs = async () => {
-      const allBlogs = await getAllBlogs();
-      setBlogs(allBlogs);
+    const fetchData = async () => {
+      const id = params.id;
+      const data = await getSingleUser(id);
+      setInfo(data);
+      setBlogs(data.blogs);
     };
-    fetchBlogs();
-  }, []);
+    fetchData();
+  }, [params.id]);
+
   return (
     <>
-      <Heading as={"h1"} textAlign={"center"}>
-        Welcome to our Blogs World !
+      <Heading textAlign={"center"} m={"8"}>
+        {info.name}
       </Heading>
-      <Container mt={"10"} maxW={"60%"}>
+      <Center>
+        <Image
+          src={`http://localhost:5000/${info.picUrl}`}
+          alt="pica"
+          w={"96"}
+          h={"60"}
+          borderRadius={"3xl"}
+        />
+      </Center>
+      <HStack wrap={"wrap"} m={"8"} gap={5}>
         {blogs.map((e) => {
           return (
             <Box
@@ -38,15 +53,13 @@ const Middle = () => {
             >
               <VStack gap={3}>
                 <HStack gap={3} w={"full"} justifyContent={"left"}>
-                  <Link to={`/single-user/${e.userId._id}`}>
-                    <Image
-                      src={`http://localhost:5000/${e.userId.picUrl}`}
-                      alt="pa"
-                      borderRadius={"50%"}
-                      w={"10"}
-                      h={"10"}
-                    />
-                  </Link>
+                  <Image
+                    src={`http://localhost:5000/${info.picUrl}`}
+                    alt="pa"
+                    borderRadius={"50%"}
+                    w={"10"}
+                    h={"10"}
+                  />
                   <Heading fontSize={"1.5rem"} noOfLines={2}>
                     {e.title}
                   </Heading>
@@ -73,9 +86,9 @@ const Middle = () => {
             </Box>
           );
         })}
-      </Container>
+      </HStack>
     </>
   );
 };
 
-export default Middle;
+export default SingleUser;

@@ -15,8 +15,8 @@ exports.registerUser = async (req, res) => {
         email: email,
         password: hashedPassword,
         isAdmin: isAdmin,
-        picName:req.file.originalname,
-        picUrl:req.file.path
+        picName: req.file.originalname,
+        picUrl: req.file.path,
       });
       const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET_KEY, {
         expiresIn: "1d",
@@ -53,9 +53,20 @@ exports.loginUser = async (req, res) => {
 
 exports.getAllUsers = async (req, res) => {
   try {
-    const users = await User.find({});
+    const users = await User.find({}).select("name , blogs , picUrl");
     res.status(200).json(users);
   } catch (err) {
     res.status(400).json(`The error in getAllUsers is : ${err}`);
+  }
+};
+
+exports.getSingleUser = async (req, res) => {
+  try {
+    const user = await User.findOne({ _id: req.params.id })
+      .select("name , blogs , picUrl")
+      .populate("blogs");
+    res.status(200).json(user);
+  } catch (err) {
+    res.status(400).json(`The error in getSingleUser is : ${err}`);
   }
 };

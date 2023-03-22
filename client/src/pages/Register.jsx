@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Button,
   Container,
@@ -11,6 +11,7 @@ import {
   VStack,
 } from "@chakra-ui/react";
 import { register } from "../services/api";
+import { useNavigate } from "react-router-dom";
 
 const Register = () => {
   const [name, setName] = useState();
@@ -18,16 +19,30 @@ const Register = () => {
   const [password, setPassword] = useState();
   const [pic, setPic] = useState();
 
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const auth = localStorage.getItem("user");
+    if (auth) {
+      navigate("/");
+    }
+  }, [navigate]);
+
   const handleRegister = async () => {
     const formdata = new FormData();
-    formdata.append("picName",pic.name);
-    formdata.append("file",pic);
-    formdata.append("name",name);
-    formdata.append("email",email);
-    formdata.append("password",password);
-   
+    formdata.append("picName", pic.name);
+    formdata.append("file", pic);
+    formdata.append("name", name);
+    formdata.append("email", email);
+    formdata.append("password", password);
+
     const result = await register(formdata);
-    localStorage.setItem("user",JSON.stringify(result.token));
+    localStorage.setItem("user", JSON.stringify(result.token));
+    if (result) {
+      navigate("/");
+    } else {
+      console.log("add toast of error in registration");
+    }
   };
 
   return (

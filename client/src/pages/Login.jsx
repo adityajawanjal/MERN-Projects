@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Button,
   Container,
@@ -12,18 +12,30 @@ import {
   InputGroup,
   InputRightElement,
 } from "@chakra-ui/react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { login } from "../services/api";
 
 const Login = () => {
-  const [email , setEmail] = useState();
-  const [password , setPassword] = useState();
+  const [email, setEmail] = useState();
+  const [password, setPassword] = useState();
 
-  const handleLogin = async () =>{
-    const userInfo = {email , password};
+  const navigate = useNavigate();
+  useEffect(() => {
+    const auth = localStorage.getItem("user");
+    if (auth) {
+      navigate("/");
+    }
+  }, [navigate]);
+
+  const handleLogin = async () => {
+    const userInfo = { email, password };
     const result = await login(userInfo);
-    console.log(result);
-  }
+    if (result) {
+      navigate("/");
+    } else {
+      console.log("toast of error");
+    }
+  };
 
   return (
     <>
@@ -46,7 +58,7 @@ const Login = () => {
               name={"email"}
               placeholder={"Enter your Email"}
               p={"3"}
-              onChange={(e)=>setEmail(e.target.value)}
+              onChange={(e) => setEmail(e.target.value)}
             />
           </FormControl>
           <FormControl>
@@ -59,7 +71,7 @@ const Login = () => {
                 placeholder={"Enter your Password"}
                 p={"3"}
                 name={"password"}
-                onChange={(e)=>setPassword(e.target.value)}
+                onChange={(e) => setPassword(e.target.value)}
               />
               <InputRightElement w={"4.5rem"}>
                 <Button
@@ -75,7 +87,13 @@ const Login = () => {
               </InputRightElement>
             </InputGroup>
           </FormControl>
-          <Button type="button" size={"lg"} bgColor={"linkedin.500"} w={"52"} onClick={handleLogin}>
+          <Button
+            type="button"
+            size={"lg"}
+            bgColor={"linkedin.500"}
+            w={"52"}
+            onClick={handleLogin}
+          >
             Login
           </Button>
           <HStack gap={1}>

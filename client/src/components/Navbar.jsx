@@ -3,6 +3,10 @@ import { Box, Heading, HStack, Image, Input } from "@chakra-ui/react";
 import { NavLink } from "react-router-dom";
 
 const Navbar = () => {
+  const auth = localStorage.getItem("user");
+  const handleLogout = () => {
+    localStorage.clear();
+  };
   return (
     <>
       <HStack
@@ -26,8 +30,17 @@ const Navbar = () => {
           <Input type={"search"} w={"80"} placeholder={"Search..."} />
         </Box>
         <HStack gap={3}>
-          <NavLink to={"/login"}>Login</NavLink>
-          <NavLink to={"/register"}>Register</NavLink>
+          {auth ? (
+            <>
+              <Box onClick={handleLogout}>Logout</Box>
+              <NavLink to={"/profile"}>Profile</NavLink>
+            </>
+          ) : (
+            <>
+              <NavLink to={"/login"}>Login</NavLink>
+              <NavLink to={"/register"}>Register</NavLink>
+            </>
+          )}
         </HStack>
       </HStack>
     </>

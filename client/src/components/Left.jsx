@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import { Box, Button, Input, VStack, Textarea } from "@chakra-ui/react";
 import { addBlog } from "../services/api";
 
@@ -7,14 +7,23 @@ const Left = () => {
   const [description, setDescription] = useState();
   const [pic, setPic] = useState();
 
-  const handleAddBlog = async () =>{
-    const file = new FormData();
-    file.append("name",pic.name);
-    file.append("file",pic.file);
-    const blogInfo = {title,description,file};
-    const result = await addBlog(blogInfo);
-    console.log(result);
-  }
+  const ref = useRef();
+  const auth = localStorage.getItem("user");
+
+  const handleAddBlog = async () => {
+    if (!auth) {
+      console.log("give toast to register first.");
+    } else {
+      const file = new FormData();
+      file.append("title", title);
+      file.append("description", description);
+      file.append("picName", pic.name);
+      file.append("file", pic);
+
+      const result = await addBlog(file);
+      console.log(result);
+    }
+  };
 
   return (
     <>
@@ -41,10 +50,20 @@ const Left = () => {
             color={"blackAlpha.900"}
             size={"md"}
             w={"60%"}
-            onChange={(e) => setPic(e.target.files[0])}
+            onClick={() => {
+              ref.current.click();
+            }}
           >
             Upload Thumbnail
           </Button>
+          <input
+            type="file"
+            name="file"
+            id="file"
+            ref={ref}
+            style={{ display: "none" }}
+            onChange={(e) => setPic(e.target.files[0])}
+          />
           <Button
             type="button"
             bgColor={"linkedin.200"}

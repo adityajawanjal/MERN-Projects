@@ -1,17 +1,18 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { Box } from "@chakra-ui/react";
 import Home from "./pages/Home";
 import Navbar from "./components/Navbar";
-import Login from './pages/Login';
-import Register from './pages/Register';
+import Login from "./pages/Login";
+import Register from "./pages/Register";
+import SingleUser from "./pages/SingleUser";
+import Profile from "./pages/Profile";
 
 const App = () => {
-  useEffect(()=>{
-    const usertoken = localStorage.getItem("user");
-    const auth = JSON.parse(usertoken);
-    console.log(auth);
-  },[])
+  // useEffect(()=>{
+  //   const usertoken = localStorage.getItem("user");
+  //   const auth = JSON.parse(usertoken);
+  // },[])
   return (
     <>
       <BrowserRouter>
@@ -27,11 +28,13 @@ const App = () => {
           color={"whiteAlpha.900"}
           pb={"14"}
         >
-          <Navbar/>
+          <Navbar />
           <Routes>
             <Route exact path="/" element={<Home />} />
             <Route exact path="/login" element={<Login />} />
             <Route exact path="/register" element={<Register />} />
+            <Route exact path="/profile" element={<Profile />} />
+            <Route exact path="/single-user/:id" element={<SingleUser />} />
           </Routes>
         </Box>
       </BrowserRouter>

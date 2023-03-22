@@ -7,7 +7,7 @@ import Right from "../components/Right";
 const Home = () => {
   return (
     <>
-      <Grid templateColumns={"1fr 3fr 1fr"} gap={3} p={"3"} >
+      <Grid templateColumns={"1fr 3fr 1fr"} gap={3} p={"3"}>
         <GridItem>
           <Left />
         </GridItem>

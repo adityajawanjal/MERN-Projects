@@ -1,34 +1,35 @@
 const mongoose = require("mongoose");
 
-const userSchema = new mongoose.Schema({
-    blogs:[
-        {
-            type:mongoose.Schema.Types.ObjectId,
-            ref:"Blog"
-        }
+const userSchema = new mongoose.Schema(
+  {
+    blogs: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Blog",
+      },
     ],
-    name:{
-        type:String,
+    name: {
+      type: String,
     },
-    email:{
-        type:String,
-        unique:true
+    email: {
+      type: String,
+      unique: true,
     },
-    password:{
-        type:String
+    password: {
+      type: String,
     },
-    isAdmin:{
-        type:Boolean,
-        default:false
+    isAdmin: {
+      type: Boolean,
+      default: false,
     },
-    picName:{
-        type:String
+    picName: {
+      type: String,
     },
-    picUrl:{
-        type:String
+    picUrl: {
+      type: String,
     },
+  },
+  { timestamps: true }
+);
 
-    
-},{timestamps:true});
-
-module.exports = mongoose.model("User",userSchema);
+module.exports = mongoose.model("User", userSchema);
