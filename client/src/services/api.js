@@ -61,3 +61,39 @@ export const getSingleUser = async (id) => {
     console.log(`The error in getSingleUserBlogs is : ${err}`);
   }
 };
+
+export const getSingleBlog = async (id) => {
+  try {
+    const result = await axios.get(`http://localhost:5000/blogs/${id}`);
+    return result.data;
+  } catch (err) {
+    console.log(`The error in getSingleBlog is : ${err}`);
+  }
+};
+
+export const deleteBlog = async (id) => {
+  const auth = localStorage.getItem("user");
+  const token = JSON.parse(auth);
+  try {
+     await axios.delete(`http://localhost:5000/blogs/${id}`,{
+      headers:{
+        Authorization: token
+      }
+     });
+  } catch (err) {
+    console.log(`The error in deleteBlog is : ${err}`);
+  }
+};
+export const updateBlog = async (data) => {
+  const auth = localStorage.getItem("user");
+  const token = JSON.parse(auth);
+  try {
+     await axios.put(`http://localhost:5000/blogs/${data.id}`,{
+      headers:{
+        Authorization: token
+      }
+     });
+  } catch (err) {
+    console.log(`The error in deleteBlog is : ${err}`);
+  }
+};

@@ -7,6 +7,8 @@ import Login from "./pages/Login";
 import Register from "./pages/Register";
 import SingleUser from "./pages/SingleUser";
 import Profile from "./pages/Profile";
+import SingleBlog from "./pages/SingleBlog";
+
 
 const App = () => {
   // useEffect(()=>{
@@ -35,6 +37,8 @@ const App = () => {
             <Route exact path="/register" element={<Register />} />
             <Route exact path="/profile" element={<Profile />} />
             <Route exact path="/single-user/:id" element={<SingleUser />} />
+            <Route exact path="/single-blog/:id" element={<SingleBlog />} />
+            
           </Routes>
         </Box>
       </BrowserRouter>

@@ -34,36 +34,55 @@ exports.getAllBlogs = async (req, res) => {
 };
 
 exports.updateBlog = async (req, res) => {
+
   try {
-    const { userId, title, description } = req.body;
-    const { blogId } = req.params;
-    const userExist = await User.findOne({ _id: userId });
-    if (userExist) {
-      const blog = userExist.blogs.filter((e) => e._id === blogId);
-      if (blog) {
-        await Blog.findByIdAndUpdate(blogId, req.body);
-        res.status(201).json("Blog Updated Successfully !");
-      } else {
-        res.status(400).json("No such Blog !");
-      }
-    } else {
-      res.status(400).json("User doesn`t exist !");
-    }
+    const blog = await Blog.findById(req.params.id);
+    console.log(blog);
   } catch (err) {
     res.status(400).json(`The error in updateBlog is ${err}`);
   }
+
+
+
+
+
+  // try {
+  //   // const { userId, title, description } = req.body;
+  //   const { blogId } = req.params;
+  //   const userExist = await User.findOne({ _id: req.user.id });
+  //   if (userExist) {
+  //     const blogs = await userExist.populate("blogs").blogs;
+   
+  //    console.log(blogs);
+      // if (blog) {
+      //   await Blog.findByIdAndUpdate(blog._id, {
+      //     title:
+      //     description:
+      //     picUrl:
+      //     picName:
+      //   });
+      //   res.status(201).json("Blog Updated Successfully !");
+      // } else {
+      //   res.status(400).json("No such Blog !");
+      // }
+//     } else {
+//       res.status(400).json("User doesn`t exist !");
+//     }
+//   } catch (err) {
+//     res.status(400).json(`The error in updateBlog is ${err}`);
+//   }
 };
 
 exports.deleteBlog = async (req, res) => {
   try {
-    const { userId, title, description } = req.body;
+    // const { userId, title, description } = req.body;
     const { blogId } = req.params;
-    const userExist = await User.findOne({ _id: userId });
+    const userExist = await User.findOne({ _id: req.user.id });
     if (userExist) {
       const blog = userExist.blogs.filter((e) => e._id === blogId);
       if (blog) {
         await Blog.findByIdAndDelete(blogId);
-        await User.findByIdAndUpdate(userId, { $pull: { blogs: blogId } });
+        await User.findByIdAndUpdate(userExist._id, { $pull: { blogs: blogId } });
         res.status(201).json("Blog Deleted  !");
       } else {
         res.status(400).json("No such Blog !");
@@ -89,3 +108,16 @@ exports.searchBlog = async (req, res) => {
     res.status(400).json(`The error in searchBlog is ${err}`);
   }
 };
+
+exports.getSingleBlog = async (req,res) =>{
+  try {
+    const blog = await Blog.findById(req.params.blogId);
+    if(blog){
+      res.status(200).json(blog);
+    }else{
+      res.status(400).json("No Blog");
+    }
+  } catch (err) {
+    res.status(400).json(`The error in getSingleBlog is ${err}`);
+  }
+}

@@ -6,6 +6,7 @@ const {
   updateBlog,
   deleteBlog,
   searchBlog,
+  getSingleBlog,
 } = require("../controllers/blog-controller");
 const {
   getAllUsers,
@@ -24,8 +25,8 @@ router.get("/users/:id", getSingleUser);
 
 router.post("/blogs", auth, blogpicUpload.single("file"), addBlog);
 router.get("/blogs", getAllBlogs);
-router.put("/blogs/:blogId", updateBlog);
-router.delete("/blogs/:blogId", deleteBlog);
+router.get("/blogs/:blogId", getSingleBlog);
+router.delete("/blogs/:blogId", auth, deleteBlog);
 router.get("/blogs/search/:key", searchBlog);
 
 module.exports = router;

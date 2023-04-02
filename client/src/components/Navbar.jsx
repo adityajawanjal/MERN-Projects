@@ -6,6 +6,7 @@ const Navbar = () => {
   const auth = localStorage.getItem("user");
   const handleLogout = () => {
     localStorage.clear();
+    window.location.reload();
   };
   return (
     <>
@@ -32,7 +33,7 @@ const Navbar = () => {
         <HStack gap={3}>
           {auth ? (
             <>
-              <Box onClick={handleLogout}>Logout</Box>
+              <NavLink onClick={() => handleLogout()}>Logout</NavLink>
               <NavLink to={"/profile"}>Profile</NavLink>
             </>
           ) : (

@@ -11,6 +11,7 @@ import {
   HStack,
   InputGroup,
   InputRightElement,
+  useToast,
 } from "@chakra-ui/react";
 import { Link, useNavigate } from "react-router-dom";
 import { login } from "../services/api";
@@ -18,8 +19,11 @@ import { login } from "../services/api";
 const Login = () => {
   const [email, setEmail] = useState();
   const [password, setPassword] = useState();
+  const [show,setShow] = useState(false);
 
   const navigate = useNavigate();
+  const toast = useToast();
+
   useEffect(() => {
     const auth = localStorage.getItem("user");
     if (auth) {
@@ -27,14 +31,26 @@ const Login = () => {
     }
   }, [navigate]);
 
+  const toggleShow = () =>{
+    setShow(!show);
+  }
   const handleLogin = async () => {
     const userInfo = { email, password };
     const result = await login(userInfo);
-    if (result) {
-      navigate("/");
-    } else {
-      console.log("toast of error");
+    if(result){
+      localStorage.setItem("user",JSON.stringify(result.token));
+      window.location.reload();
+    }else{
+      toast({
+        title: 'Error in Login .',
+        description: "The Email or Password may not be correct !",
+        status: "error",
+        duration: 3000,
+        isClosable: true,
+        position:"top"
+      });
     }
+    
   };
 
   return (
@@ -42,6 +58,7 @@ const Login = () => {
       <Container
         maxW={"container.sm"}
         border={"2px solid red"}
+        borderRadius={"3xl"}
         mt={"16"}
         p={"7"}
       >
@@ -67,7 +84,7 @@ const Login = () => {
             </FormLabel>
             <InputGroup>
               <Input
-                type={"password"}
+                type={show ? "text" : "password"}
                 placeholder={"Enter your Password"}
                 p={"3"}
                 name={"password"}
@@ -79,10 +96,11 @@ const Login = () => {
                   bgColor={"linkedin.700"}
                   color={"whiteAlpha.900"}
                   size={"md"}
-                  pr={"8"}
-                  pl={"8"}
+                  pr={"10"}
+                  pl={"10"}
+                  onClick={toggleShow}
                 >
-                  Show
+                  {show ? "Hide" : "Show"}
                 </Button>
               </InputRightElement>
             </InputGroup>
@@ -99,7 +117,13 @@ const Login = () => {
           <HStack gap={1}>
             <Text>Don`t have a account ?</Text>
             <Link to={"/register"}>
-              <Text color={"cyan.500"}>Register</Text>
+              <Text
+                color={"cyan.500"}
+                textDecor={"underline"}
+                fontSize={"1.2rem"}
+              >
+                Register
+              </Text>
             </Link>
           </HStack>
         </VStack>

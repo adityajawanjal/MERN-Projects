@@ -9,7 +9,7 @@ import {
   HStack,
 } from "@chakra-ui/react";
 import { getAllBlogs } from "../services/api";
-import { Link } from "react-router-dom";
+import { Link, NavLink } from "react-router-dom";
 
 const Middle = () => {
   const [blogs, setBlogs] = useState([]);
@@ -60,6 +60,7 @@ const Middle = () => {
                 <Text noOfLines={3} fontSize={"1.2rem"}>
                   {e.description}
                 </Text>
+                
                 <Box
                   alignSelf={"end"}
                   fontSize={"1.2rem"}
@@ -67,8 +68,11 @@ const Middle = () => {
                   borderBottom={"1px solid pink"}
                   pb={"2px"}
                 >
+                  <NavLink to={`/single-blog/${e._id}`}>
                   Read more...
+                  </NavLink>
                 </Box>
+               
               </VStack>
             </Box>
           );

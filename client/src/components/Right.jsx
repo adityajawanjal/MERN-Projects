@@ -8,16 +8,22 @@ import {
   Stack,
   Text,
 } from "@chakra-ui/react";
-import { getAllUsers } from "../services/api";
+import { getAllUsers, getSingleUser } from "../services/api";
 import { Link } from "react-router-dom";
-
+import jwtDecode from 'jwt-decode';
 const Right = () => {
   const [users, setUsers] = useState([]);
+  const [loginUser, setLoginUser] = useState([]);
 
   useEffect(() => {
     const fetchUsers = async () => {
+      const auth = localStorage.getItem("user");
+      const token = JSON.parse(auth);
+      const userId = jwtDecode(token).id;
       const allUsers = await getAllUsers();
+      const user = await getSingleUser(userId);
       setUsers(allUsers);
+      setLoginUser(user);
     };
     fetchUsers();
   }, []);
@@ -29,7 +35,9 @@ const Right = () => {
         </Heading>
         <Container maxW={"container.sm"}>
           <Stack gap={2}>
-            {users.map((e) => {
+            {users.filter((e)=>{
+              return e._id !== loginUser._id;
+            }).map((e) => {
               return (
                 <Link to={`/single-user/${e._id}`} key={e._id}>
                   <HStack

@@ -8,6 +8,7 @@ import {
   Input,
   InputGroup,
   InputRightElement,
+  useToast,
   VStack,
 } from "@chakra-ui/react";
 import { register } from "../services/api";
@@ -18,8 +19,11 @@ const Register = () => {
   const [email, setEmail] = useState();
   const [password, setPassword] = useState();
   const [pic, setPic] = useState();
+  const [show , setShow] = useState(false);
+
 
   const navigate = useNavigate();
+  const toast = useToast();
 
   useEffect(() => {
     const auth = localStorage.getItem("user");
@@ -28,8 +32,22 @@ const Register = () => {
     }
   }, [navigate]);
 
+  const toggleShow = () =>{
+    setShow(!show);
+  }
+
   const handleRegister = async () => {
-    const formdata = new FormData();
+    if(!name || !email || !password || !pic){
+      toast({
+        title: 'All fields are Mandatory .',
+        description: "Please fill Name , Email , Password , Pic !",
+        status: "warning",
+        duration: 3000,
+        isClosable: true,
+        position:"top"
+      });
+    }else{
+      const formdata = new FormData();
     formdata.append("picName", pic.name);
     formdata.append("file", pic);
     formdata.append("name", name);
@@ -37,12 +55,23 @@ const Register = () => {
     formdata.append("password", password);
 
     const result = await register(formdata);
-    localStorage.setItem("user", JSON.stringify(result.token));
     if (result) {
-      navigate("/");
+      localStorage.setItem("user", JSON.stringify(result.token));
+      setTimeout(()=>{
+        window.location.reload();
+      },1000);
     } else {
-      console.log("add toast of error in registration");
+      toast({
+        title: 'Error in Registration .',
+        description: "Please try again !",
+        status: "error",
+        duration: 3000,
+        isClosable: true,
+        position:"top"
+      });
     }
+    }
+    
   };
 
   return (
@@ -87,7 +116,7 @@ const Register = () => {
             </FormLabel>
             <InputGroup>
               <Input
-                type={"password"}
+                type={show ? "text" : "password"}
                 placeholder={"Enter your Password"}
                 p={"3"}
                 name={"password"}
@@ -96,13 +125,15 @@ const Register = () => {
               <InputRightElement w={"4.5rem"}>
                 <Button
                   type="button"
-                  bgColor={"linkedin.700"}
+                  bgColor={ "linkedin.700"}
                   color={"whiteAlpha.900"}
                   size={"md"}
-                  pr={"8"}
-                  pl={"8"}
+                  pr={"10"}
+                  pl={"10"}
+                  onClick={toggleShow}
+                  
                 >
-                  Show
+                  {show ? "Hide" : "Show"}
                 </Button>
               </InputRightElement>
             </InputGroup>
