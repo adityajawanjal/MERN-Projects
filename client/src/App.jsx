@@ -1,49 +1,32 @@
-import React from "react";
-import { BrowserRouter, Route, Routes } from "react-router-dom";
-import { Box } from "@chakra-ui/react";
-import Home from "./pages/Home";
-import Navbar from "./components/Navbar";
-import Login from "./pages/Login";
-import Register from "./pages/Register";
-import SingleUser from "./pages/SingleUser";
-import Profile from "./pages/Profile";
-import SingleBlog from "./pages/SingleBlog";
-
+import React from 'react'
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import Home from './pages/Home';
+import Notes from './pages/Notes';
 
 const App = () => {
-  // useEffect(()=>{
-  //   const usertoken = localStorage.getItem("user");
-  //   const auth = JSON.parse(usertoken);
-  // },[])
   return (
     <>
       <BrowserRouter>
-        <Box
-          bgImg={
-            "https://img.freepik.com/free-photo/old-black-background-grunge-texture-dark-wallpaper-blackboard-chalkboard-room-wall_1258-28313.jpg?"
-          }
-          w={"full"}
-          minH={"100vh"}
-          bgRepeat={"no-repeat"}
-          bgPos={"center"}
-          bgSize={"cover"}
-          color={"whiteAlpha.900"}
-          pb={"14"}
-        >
-          <Navbar />
-          <Routes>
-            <Route exact path="/" element={<Home />} />
-            <Route exact path="/login" element={<Login />} />
-            <Route exact path="/register" element={<Register />} />
-            <Route exact path="/profile" element={<Profile />} />
-            <Route exact path="/single-user/:id" element={<SingleUser />} />
-            <Route exact path="/single-blog/:id" element={<SingleBlog />} />
-            
-          </Routes>
-        </Box>
+      <Routes>
+        <Route exact path='/' element={<Home/>} />
+        <Route exact path='/notes' element={<Notes/>} />
+      </Routes>
       </BrowserRouter>
     </>
-  );
-};
+  )
+}
 
-export default App;
+// const accountSid = 'AC88a54cd314a3070e0b1f4718d12b9387';
+// const authToken = '93176b4727ab6df83c434caa04bae57b';
+// const client = require('twilio')(accountSid, authToken);
+
+// client.messages
+//     .create({
+//         body: 'Your appointment is coming up on July 21 at 3PM',
+//         from: 'whatsapp:+14155238886',
+//         to: 'whatsapp:+918446496766'
+//     })
+//     .then(message => console.log(message.sid))
+//     .done();
+
+export default App
